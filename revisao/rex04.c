@@ -3,50 +3,55 @@
 #include <time.h>
 #include <limits.h>
 
-#define STACK_MAX 128
+#define QUEUE_MAX 32
 
-struct stack {
-  int top;
-  int arr[STACK_MAX];
+struct queue {
+  int front;
+  int arr[QUEUE_MAX];
 };
 
 int
-isEmpty(struct stack *sp) { return sp->top == -1; }
+isEmpty(struct queue *qp) { return qp->front == -1; }
 
 int
-isFull(struct stack *sp) { return sp->top == STACK_MAX - 1; }
+isFull(struct queue *qp) { return qp->front == QUEUE_MAX - 1; }
 
 void
-push(struct stack *sp, int value)
+push(struct queue *qp, int value)
 {
-  if (isFull(sp))
+  if (isFull(qp))
     return;
-  sp->arr[++sp->top] = value;
+  for (int i = ++qp->front; i > 0; i--)
+    qp->arr[i] = qp->arr[i-1];
+  qp->arr[0] = value;
 }
 
 void
-pushRandom(struct stack *sp)
+pushRandom(struct queue *qp)
 {
-  if (isFull(sp))
+  if (isFull(qp))
     return;
-  sp->arr[++sp->top] = rand() % 1000;
+  for (int i = ++qp->front; i > 0; i--)
+    qp->arr[i] = qp->arr[i-1];
+  qp->arr[0] = rand() % 100;
 }
 
 int
-pop(struct stack *sp)
+pop(struct queue *qp)
 {
-  if (isEmpty(sp))
+  if (isEmpty(qp))
     return INT_MIN;
-  return sp->arr[sp->top--];
+  return qp->arr[qp->front--];
 }
 
 void
-show(struct stack *sp)
+show(struct queue *qp)
 {
-  if(isEmpty(sp))
+  if(isEmpty(qp))
     return;
-  for (int i = sp->top; i >= 0; i--)
-    printf("%d = %d\n", i+1, sp->arr[i]);
+  for (int i = 0; i < qp->front; i++)
+    printf("%d ", qp->arr[i]);
+  printf("\n");
 }
 
 void
@@ -62,8 +67,8 @@ bubbleSort(int *arr, int n)
 {
   for (int i = 0; i < n-1; i++)
     for (int j = 0; j < n-i-1; j++)
-      if (arr[j] > arr[j+1])
-        swap(arr,j+1,j);
+      if (arr[j] < arr[j+1])
+        swap(arr,j,j+1);
 }
 
 int
@@ -71,21 +76,21 @@ main()
 {
   srand(time(NULL));
 
-  struct stack s;
-  s.top = -1;
+  struct queue q;
+  q.front = -1;
 
-  for (int i = 0; i < STACK_MAX; i++) {
-    pushRandom(&s);
+  for (int i = 0; i < QUEUE_MAX; i++) {
+    pushRandom(&q);
   }  
 
-  printf("Stack desorganizado:\n");
-  show(&s);
+  printf("Queue desorganizado:\n");
+  show(&q);
 
   printf("\n");
 
-  printf("Stack organizado:\n");
-  bubbleSort(s.arr, s.top+1);
-  show(&s);
+  printf("Queue organizado:\n");
+  bubbleSort(q.arr, q.front+1);
+  show(&q);
 
   return 0;
 }
