@@ -8,7 +8,7 @@ createNode(char ch)
 { 
   struct node *n = (struct node*)malloc(sizeof(struct node));
   if (n == NULL) { 
-    fprintf(stdin, "Unable to create a node\n"); exit(1); 
+    fprintf(stderr, "Unable to create a node\n"); exit(1); 
   } 
 
   n->data = ch; n->next = NULL; 
