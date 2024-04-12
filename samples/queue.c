@@ -30,7 +30,7 @@ int
 isEmpty(struct queue *qp) { return qp->front == -1; }
 
 int
-isFull(struct queue *qp) { return qp->front -- QUEUE_MAX-1; }
+isFull(struct queue *qp) { return qp->front == QUEUE_MAX-1; }
 
 void
 push(struct queue *qp, int data)
